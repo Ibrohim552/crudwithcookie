@@ -1,0 +1,54 @@
+@page "/login"
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authentication.Cookies
+@inject NavigationManager Navigation
+@inject IHttpContextAccessor HttpContextAccessor
+
+<h3>Login</h3>
+
+@if (errorMessage != null)
+{
+    <p style="color: red;">@errorMessage</p>
+}
+
+<form>
+    <div>
+        <label>Username:</label>
+        <input @bind="username" />
+    </div>
+    <div>
+        <label>Password:</label>
+        <input @bind="password" type="password" />
+    </div>
+    <button @onclick="LoginUser">Login</button>
+</form>
+
+@code {
+    private string username;
+    private string password;
+    private string errorMessage;
+
+    private async Task LoginUser()
+    {
+        if (username == "admin" && password == "password") // Замените на свою логику проверки
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, username),
+                new Claim(ClaimTypes.Role, "Admin")
+            };
+
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+
+            await HttpContextAccessor.HttpContext.SignInAsync("MyCookieAuth", principal);
+
+            Navigation.NavigateTo("/");
+        }
+        else
+        {
+            errorMessage = "Invalid username or password.";
+        }
+    }
+}

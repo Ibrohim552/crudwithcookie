@@ -1,0 +1,13 @@
+@using Microsoft.AspNetCore.Authentication
+@inject NavigationManager Navigation
+@inject IHttpContextAccessor HttpContextAccessor
+
+<button @onclick="LogoutUser">Logout</button>
+
+@code {
+    private async Task LogoutUser()
+    {
+        await HttpContextAccessor.HttpContext.SignOutAsync("Cookie");
+        Navigation.NavigateTo("/login");
+    }
+}

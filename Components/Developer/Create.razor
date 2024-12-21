@@ -1,7 +1,9 @@
 @page "/developers/create"
 @using BlazorCrud.Services
+@using Microsoft.AspNetCore.Authorization
 @inject IDeveloperService DeveloperService
 @inject NavigationManager Navigation
+@attribute [Authorize]
 
 <h3>Create Developer</h3>
 

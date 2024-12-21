@@ -1,7 +1,8 @@
 @page "/developers/edit/{id:int}"
 @using BlazorCrud.Services
+@using Microsoft.AspNetCore.Authorization
 @rendermode InteractiveServer
-
+@attribute [Authorize]
 <h3 class="text-center">Edit Developers</h3>
 
 <div>

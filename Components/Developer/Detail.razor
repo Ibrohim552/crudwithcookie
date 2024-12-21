@@ -1,7 +1,8 @@
 @page "/developers/details/{id:int}"
 @using BlazorCrud.Services
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.EntityFrameworkCore.Metadata.Internal
-   
+@attribute [Authorize]
 
   <h3>Developer Details</h3>
 

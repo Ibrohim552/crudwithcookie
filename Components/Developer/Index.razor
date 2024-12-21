@@ -1,7 +1,8 @@
 @page "/developers/index"
 @using BlazorCrud.Services
+@using Microsoft.AspNetCore.Authorization
 @inject IDeveloperService DeveloperService
-
+@attribute [Authorize]
 <h3 class="text-center text-light mt-4 display-4">Our Developers</h3>
 <p class="text-center text-light mb-4">
     Add skilled developers to your team and manage them efficiently.
