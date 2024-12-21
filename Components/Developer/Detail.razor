@@ -1,0 +1,40 @@
+@page "/developers/details/{id:int}"
+@using BlazorCrud.Services
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+   
+
+  <h3>Developer Details</h3>
+
+<div>
+    <h5 class="card-title text-center text-primary">@Developer.FirstName @Developer.LastName</h5>
+    <p class="card-text text-center text-dark">
+        <strong>Email:</strong> @Developer.Email
+        <strong>Age:</strong>@Developer.Age
+    </p>
+</div>
+
+<div class="d-flex justify-content-around">
+    <NavLink class="btn btn-outline-primary btn-sm" href="@($"/developers/edit/{Developer.Id}")">Edit</NavLink>
+    <NavLink class="btn btn-outline-danger btn-sm" href="@($"/developers/delete/{Developer.Id}")">Delete</NavLink>
+    <NavLink class="btn btn-outline-secondary btn-sm" href="/developers/index">Back to List</NavLink>
+</div>
+
+
+@code{
+
+    [Parameter] public int Id { get; set; }
+   private Developer Developer { get; set; }
+   [Inject] public IDeveloperService DeveloperService { get; set; }
+   [Inject]
+    NavigationManager NavigationManager{ get; set; }
+   protected override async Task OnInitializedAsync()
+   {
+       Developer =  DeveloperService.GetById(Id);
+       if (Developer == null)
+       {
+           Console.WriteLine("Developer не найден.");
+           NavigationManager.NavigateTo("/developers/index");
+       }
+   }
+
+}

@@ -1,0 +1,72 @@
+@page "/developers/edit/{id:int}"
+@using BlazorCrud.Services
+@rendermode InteractiveServer
+
+<h3 class="text-center">Edit Developers</h3>
+
+<div>
+    <EditForm FormName="EditUserForm" Model="@developer" OnValidSubmit="OnUpdate" class="shadow p-4 rounded border bg-light">
+       
+        <div class="mb-3">
+            <label for="firstName" class="form-label">First Name</label>
+            <InputText id="firstName" @bind-Value="developer.FirstName" class="form-control"/>
+        </div>
+
+        <div class="mb-3">
+            <label for="lastName" class="form-label">Last Name</label>
+            <InputText id="lastName" @bind-Value="developer.LastName" class="form-control"/>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <InputText id="email" @bind-Value="developer.Email" class="form-control"/>
+        </div>
+        <div>
+            <label for="Age" class="form-label">Age</label>
+            <InputNumber TValue="int" @bind-Value="developer.Age"/>
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <button type="submit">Update</button>
+            <NavLink href="/developers/index" class="btn btn-secondary">Cancel</NavLink>
+        </div>
+    </EditForm>
+</div>
+
+@code
+{
+    [Parameter] public int Id { get; set; }
+    private Developer? developer;
+    [Inject] public IDeveloperService DeveloperService { get; set; }
+    [Inject] public NavigationManager NavigationManager { get; set; }
+    private string responseMessage = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        developer = DeveloperService.GetById(Id);
+
+        if (developer == null)
+        {
+            responseMessage = "Developer not found!";
+            NavigationManager.NavigateTo("/developers/index");
+        }
+    }
+
+
+    private void OnUpdate()
+    {
+        if (developer != null)
+        {
+            var response = DeveloperService.Update(developer);
+
+            if (response)
+            {
+                responseMessage = "Developer updated successfully!";
+                NavigationManager.NavigateTo("/developers/index");
+            }
+            else
+            {
+                responseMessage = "Failed to update developer.";
+            }
+        }
+    }
+}

@@ -1,0 +1,45 @@
+@page "/developers/delete/{id:int}"
+@using BlazorCrud.Services
+
+<div>
+    <h1>Are you sure You want to delete?</h1>
+    <p>
+        <strong>Name:</strong> @Developer.FirstName @Developer.LastName<br/>
+        <strong>Email:</strong> @Developer.Email<br/>
+        <strong>Age:</strong> @Developer.Age <br/>
+    </p>
+    <div style="display: flex">
+        <EditForm Model="Id" OnValidSubmit="OnDelete" FormName="DeleteUserForm">
+            <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+        </EditForm>
+        <NavLink class="btn btn-secondary btn-sm" href="/developers/index">Cancel</NavLink>
+    </div>
+</div>
+
+@code
+{
+    [Parameter] public int Id { get; set; }
+    [Parameter] public Developer Developer { get; set; }
+    [Inject] public IDeveloperService DeveloperService { get; set; }
+
+    [Inject] public NavigationManager Navigation { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Developer = DeveloperService.GetById(Id);
+    }
+
+    private async Task OnDelete()
+    {
+        bool result =  DeveloperService.Delete(Id);
+        if (result)
+        {
+            Navigation.NavigateTo("/developers/index");
+        }
+        else
+        {
+           
+            Console.WriteLine("Failed to delete");
+        }
+    }
+}

@@ -1,0 +1,70 @@
+@page "/developers/index"
+@using BlazorCrud.Services
+@inject IDeveloperService DeveloperService
+
+<h3 class="text-center text-light mt-4 display-4">Our Developers</h3>
+<p class="text-center text-light mb-4">
+    Add skilled developers to your team and manage them efficiently.
+</p>
+
+<div class="text-center mb-4">
+    <NavLink Match="NavLinkMatch.All" href="/developers/create" class="btn btn-lg btn-primary shadow">
+        <i class="oi oi-plus"></i> Add Developer
+    </NavLink>
+</div>
+
+@if (_developers == null)
+{
+    <div class="text-center text-light">
+        <div class="spinner-border text-light" role="status"></div>
+        <p>Loading...</p>
+    </div>
+}
+else if (!_developers.Any())
+{
+    <div class="text-center text-light">
+        <i class="oi oi-warning text-danger" style="font-size: 3rem;"></i>
+        <p>No Records Found.</p>
+    </div>
+}
+else
+{
+    <div class="row">
+        @foreach (var developer in _developers)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-lg border-0">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h5 class="card-title mb-0">@developer.FirstName @developer.LastName</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text text-center">
+                            <strong>Email:</strong> @developer.Email
+                        </p>
+                        <div class="d-flex justify-content-between">
+                            <NavLink class="btn btn-sm btn-outline-primary" href="@($"/developers/edit/{developer.Id}")">
+                                <i class="oi oi-pencil"></i> Edit
+                            </NavLink>
+                            <NavLink class="btn btn-sm btn-outline-info" href="@($"/developers/details/{developer.Id}")">
+                                <i class="oi oi-magnifying-glass"></i> Details
+                            </NavLink>
+                            <NavLink class="btn btn-sm btn-outline-danger" href="@($"/developers/delete/{developer.Id}")">
+                                <i class="oi oi-trash"></i> Delete
+                            </NavLink>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private IEnumerable<Developer> _developers;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _developers =  DeveloperService.GetAll();
+    }
+
+}
